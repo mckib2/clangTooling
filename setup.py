@@ -77,7 +77,7 @@ def do_build(git_url='https://github.com/llvm/llvm-project.git'):
 
 
 logging.basicConfig(level=logging.INFO)
-if len((pathlib.Path(__file__).parent / 'lib').glob('*')) == 1:
+if len(list((pathlib.Path(__file__).parent / 'lib').glob('*'))) == 1:
     logging.info('Building static libaries...')
     do_build()
 else:
