@@ -11,7 +11,7 @@ on: [push]
 #      - published
 
 env:
-  CIBW_SKIP: cp27-* pp27-* # skip python2.7 builds
+  CIBW_SKIP: cp27-* pp27-* cp35-* cp34-* cp33-* # skip python2.7 and <=3.5 builds
 
 jobs:
   build_wheels:
