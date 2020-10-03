@@ -1,0 +1,5 @@
+*.a
+*~
+build/
+clangTooling.egg-info/
+dist/
