@@ -79,6 +79,8 @@ def do_build(git_url='https://github.com/llvm/llvm-project.git'):
 logging.basicConfig(level=logging.INFO)
 if len(list((pathlib.Path(__file__).parent / 'lib').glob('*'))) == 1:
     logging.info('Building static libaries...')
+    _run_cmd(['python', '-m', 'pip', 'install', 'cmake', 'ninja'],
+             "Failed to install cmake and ninja")
     do_build()
 else:
     logging.info('Static libraries appear to exist already')
