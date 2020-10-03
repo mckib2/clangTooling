@@ -1,7 +1,7 @@
 name: Build and upload to PyPI
 
-# Build on every branch push, tag push, and pull request change:
-on: [push, pull_request]
+# Build on every branch push, tag push:
+on: [push]
 # Alternatively, to publish when a (published) GitHub Release is created, use the following:
 #on:
 #   push:
@@ -56,6 +56,13 @@ jobs:
         name: Install Python
         with:
           python-version: '3.7'
+
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.3
+        with:
+          cmake-version: '3.16.x'
+
+      - uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Build sdist
         run: python setup.py sdist
