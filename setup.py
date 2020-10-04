@@ -12,7 +12,7 @@ import logging
 from time import time
 
 from distutils.core import setup
-from setuptools import find_packages
+from setuptools import Extension, find_packages
 
 
 def _include_patterns(*patterns):
@@ -98,4 +98,14 @@ setup(
     keywords='clang',
     install_requires=open('requirements.txt', encoding='utf-8').read().split(),
     python_requires='>=3.6',
+
+    # We need "an" extension to get separate wheels for each OS
+    ext_modules=[
+        Extension(
+            '_dummy',
+            sources=['empty.c'],
+            include_dirs=[str(pathlib.Path('./'))],
+            language='c',
+        )
+    ],
 )
