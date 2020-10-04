@@ -16,8 +16,8 @@ from distutils.core import setup
 from setuptools import Extension, find_packages
 
 
-# TODO: I think this is broken on Windows
-LIB_EXT = distutils.ccompiler.new_compiler().library_filename('', lib_type='static')
+# Windows requires nonempty static library name to get extension
+LIB_EXT = distutils.ccompiler.new_compiler().library_filename('dummy', lib_type='static')
 LIB_EXT = pathlib.Path(LIB_EXT).suffix
 logging.info('Found static library extension: %s', LIB_EXT)
 
@@ -126,8 +126,6 @@ setup(
     python_requires='>=3.6',
     include_package_data=True,
     package_data={
-        # 'clangTooling.lib': [f'clangTooling/lib/*{LIB_EXT}'],
-        # 'clangTooling.include': ['clangTooling/include/headers/**/*'],
         '': [f'*{LIB_EXT}', '*.h', '*.inc'],
     },
 
