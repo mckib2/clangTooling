@@ -1,1 +1,1 @@
-void PyInit_dummy() {}
+void PyInit__dummy() {}
