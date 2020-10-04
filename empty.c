@@ -1,1 +1,1 @@
-/* THIS FILE PURPOSEFULLY LEFT EMPTY */
+void PyInit_dummy() {}
