@@ -123,6 +123,11 @@ setup(
     keywords='clang',
     install_requires=open('requirements.txt', encoding='utf-8').read().split(),
     python_requires='>=3.6',
+    include_package_data=True,
+    package_data={
+        'lib': [f'lib/*{LIB_EXT}'],
+        'include': ['include/headers/**/*'],
+    },
 
     # We need "an" extension to get separate wheels for each OS
     ext_modules=[

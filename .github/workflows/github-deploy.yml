@@ -11,7 +11,8 @@ on: [push]
 #      - published
 
 env:
-  CIBW_SKIP: cp27-* pp27-* cp35-* cp34-* cp33-* # skip python2.7 and <=3.5 builds
+  # CIBW_SKIP: cp27-* pp27-* cp35-* cp34-* cp33-* # skip python2.7 and <=3.5 builds
+  CIBW_BUILD: cp38-*  # only do one version of python for now
 
 jobs:
   build_wheels:
@@ -75,7 +76,7 @@ jobs:
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
     # upload to PyPI on every tag starting with 'v'
-    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
+    # if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
     # alternatively, to publish when a GitHub Release is created, use the following rule:
     # if: github.event_name == 'release' && github.event.action == 'published'
     steps:
