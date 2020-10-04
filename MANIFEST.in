@@ -1,4 +1,4 @@
 include requirements.txt
 include empty.c
-graft lib
-graft include
+graft clangTooling/lib
+graft clangTooling/include

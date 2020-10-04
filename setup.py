@@ -4,7 +4,7 @@ from tempfile import TemporaryDirectory
 import subprocess
 import pathlib
 from fnmatch import filter as fnfilter
-from shutil import copytree, copyfileobj  # , which
+from shutil import copytree, copyfileobj
 from os import cpu_count, walk, chmod
 from os.path import isdir, join
 import distutils.ccompiler
@@ -16,6 +16,7 @@ from distutils.core import setup
 from setuptools import Extension, find_packages
 
 
+# TODO: I think this is broken on Windows
 LIB_EXT = distutils.ccompiler.new_compiler().library_filename('', lib_type='static')
 LIB_EXT = pathlib.Path(LIB_EXT).suffix
 logging.info('Found static library extension: %s', LIB_EXT)
@@ -80,8 +81,8 @@ def do_build(git_url='https://github.com/llvm/llvm-project.git'):
                     chmod(join(root, doc), 0o777)
             logging.info('Took %g seconds to recursively chmod', (time() - tstart))
 
-        lib_dir = pathlib.Path(__file__).parent / 'lib'
-        include_dir = pathlib.Path(__file__).parent / 'include'
+        lib_dir = pathlib.Path(__file__).parent / 'clangTooling/lib'
+        include_dir = pathlib.Path(__file__).parent / 'clangTooling/include'
         lib_dir.mkdir(exist_ok=True, parents=True)
         include_dir.mkdir(exist_ok=True, parents=True)
         tstart = time()
@@ -96,7 +97,7 @@ def do_build(git_url='https://github.com/llvm/llvm-project.git'):
 
 
 logging.basicConfig(level=logging.INFO)
-if not list((pathlib.Path(__file__).parent / 'lib').glob(f'*{LIB_EXT}')):
+if not list((pathlib.Path(__file__).parent / 'clangTooling/lib').glob(f'*{LIB_EXT}')):
     logging.info('Checking build dependencies...')
     # if which('cmake') is None:
     _run_cmd(['python', '-m', 'pip', 'install', 'cmake'],
@@ -112,7 +113,7 @@ else:
 
 setup(
     name='clangTooling',
-    version='0.0.3',
+    version='0.0.4',
     author='Nicholas McKibben',
     author_email='nicholas.bgp@gmail.com',
     url='https://github.com/mckib2/clangTooling',
@@ -125,11 +126,12 @@ setup(
     python_requires='>=3.6',
     include_package_data=True,
     package_data={
-        'lib': [f'lib/*{LIB_EXT}'],
-        'include': ['include/headers/**/*'],
+        # 'clangTooling.lib': [f'clangTooling/lib/*{LIB_EXT}'],
+        # 'clangTooling.include': ['clangTooling/include/headers/**/*'],
+        '': [f'*{LIB_EXT}', '*.h', '*.inc'],
     },
 
-    # We need "an" extension to get separate wheels for each OS
+    # Add a dummy extension to get separate wheels for each OS
     ext_modules=[
         Extension(
             '_dummy',
