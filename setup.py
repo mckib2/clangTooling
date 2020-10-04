@@ -87,7 +87,7 @@ else:
 
 setup(
     name='clangTooling',
-    version='0.0.1',
+    version='0.0.2',
     author='Nicholas McKibben',
     author_email='nicholas.bgp@gmail.com',
     url='https://github.com/mckib2/clangTooling',
