@@ -71,7 +71,7 @@ def do_build(git_url='https://github.com/llvm/llvm-project.git'):
         logging.info('Took %g seconds to copy static libraries', (time() - tstart))
         tstart = time()
         copytree(
-            tmpdir, include_dir, dirs_exist_ok=True,
+            tmpdir, include_dir / 'headers',
             ignore=_include_patterns('*.h', '*.inc'), copy_function=_copy)
         logging.info('Took %g seconds to copy headers', (time() - tstart))
 
