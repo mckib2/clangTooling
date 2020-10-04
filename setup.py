@@ -4,7 +4,7 @@ from tempfile import TemporaryDirectory
 import subprocess
 import pathlib
 from fnmatch import filter as fnfilter
-from shutil import copytree, copyfileobj, which
+from shutil import copytree, copyfileobj  # , which
 from os import cpu_count, walk, chmod
 from os.path import isdir, join
 import distutils.ccompiler
@@ -98,12 +98,12 @@ def do_build(git_url='https://github.com/llvm/llvm-project.git'):
 logging.basicConfig(level=logging.INFO)
 if not list((pathlib.Path(__file__).parent / 'lib').glob(f'*{LIB_EXT}')):
     logging.info('Checking build dependencies...')
-    if which('cmake') is None:
-        _run_cmd(['python', '-m', 'pip', 'install', 'cmake'],
-                 "Failed to install cmake")
-    if which('ninja') is None:
-        _run_cmd(['python', '-m', 'pip', 'install', 'ninja'],
-                 "Failed to install ninja")
+    # if which('cmake') is None:
+    _run_cmd(['python', '-m', 'pip', 'install', 'cmake'],
+             "Failed to install cmake")
+    # if which('ninja') is None:
+    _run_cmd(['python', '-m', 'pip', 'install', 'ninja'],
+             "Failed to install ninja")
 
     logging.info('Building static libaries...')
     do_build()
