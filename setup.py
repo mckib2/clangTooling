@@ -4,13 +4,14 @@ from tempfile import TemporaryDirectory
 import subprocess
 import pathlib
 from fnmatch import filter as fnfilter
-from shutil import copytree, copyfileobj
+from shutil import copytree, copyfileobj, rmtree
 from os import cpu_count, walk, chmod
 from os.path import isdir, join
 import distutils.ccompiler
 import logging
 from time import time
 import platform
+import sys
 
 from distutils.core import setup
 from setuptools import Extension, find_packages
@@ -90,14 +91,20 @@ def do_build(git_url='https://github.com/llvm/llvm-project.git'):
             _copy(lib, lib_dir / lib.name)
         logging.info('Took %g seconds to copy static libraries', (time() - tstart))
         tstart = time()
+        hdr_dest_dir = include_dir / 'headers'
+        if hdr_dest_dir.exists():
+            rmtree(hdr_dest_dir)
         copytree(
-            tmpdir, include_dir / 'headers',
+            tmpdir, hdr_dest_dir,
             ignore=_include_patterns('*.h', '*.inc'), copy_function=_copy)
         logging.info('Took %g seconds to copy headers', (time() - tstart))
 
 
 logging.basicConfig(level=logging.INFO)
-if not list((pathlib.Path(__file__).parent / 'clangTooling/lib').glob(f'*{LIB_EXT}')):
+# We don't want to rebuild clangTooling if it's a source
+# distribution or the files have already been generated
+if ('sdist' not in sys.argv and
+        not list((pathlib.Path(__file__).parent / 'clangTooling/lib').glob(f'*{LIB_EXT}'))):
     logging.info('Checking build dependencies...')
     # if which('cmake') is None:
     _run_cmd(['python', '-m', 'pip', 'install', 'cmake'],
