@@ -8,7 +8,7 @@ def header_dir() -> pathlib.Path:
     return pathlib.Path(__file__).parent / 'headers/'
 
 
-def llvm_includes() -> list(pathlib.Path):
+def llvm_includes() -> list:
     '''Include directories for LLVM.'''
     hdrs = header_dir()
     return [
@@ -17,7 +17,7 @@ def llvm_includes() -> list(pathlib.Path):
     ]
 
 
-def clang_includes() -> list(pathlib.Path):
+def clang_includes() -> list:
     '''Include directories for clang.'''
     hdrs = header_dir()
     return [
