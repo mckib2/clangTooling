@@ -39,5 +39,26 @@ def llvm_library_list() -> list:
     with open('llvm_lib_list.txt', 'r') as txt:
         theirs = txt.read().split()
     ours = set(library_list())
-    print(ours, theirs)
     return [lib for lib in theirs if lib in ours]
+
+
+def clang_library_list() -> list:
+    '''Return a list of included clang libraries in linking order.'''
+    # We have to keep this list updated manually
+    return [
+        'clangTooling',
+        'clangASTMatchers',
+        'clangFormat',
+        'clangFrontend',
+        'clangDriver',
+        'clangParse',
+        'clangSerialization',
+        'clangSema',
+        'clangEdit',
+        'clangAnalysis',
+        'clangToolingCore',
+        'clangAST',
+        'clangRewrite',
+        'clangLex',
+        'clangBasic',
+    ]
