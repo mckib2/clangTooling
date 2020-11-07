@@ -4,10 +4,9 @@ from tempfile import TemporaryDirectory
 import subprocess
 import pathlib
 from fnmatch import filter as fnfilter
-from shutil import copytree, copyfileobj, rmtree
+from shutil import copytree, copyfileobj, rmtree, which as shutil_which
 from os import cpu_count, walk, chmod
 from os.path import isdir, join
-import distutils.ccompiler
 import logging
 from time import time
 import platform
@@ -16,10 +15,12 @@ import sys
 from distutils.core import setup
 from setuptools import Extension, find_packages
 
+from clangTooling import get_lib_ext
+from clangTooling.lib import _clean_prefix, _clean_ext
+
 
 # Windows requires nonempty static library name to get extension
-LIB_EXT = distutils.ccompiler.new_compiler().library_filename('dummy', lib_type='static')
-LIB_EXT = pathlib.Path(LIB_EXT).suffix
+LIB_EXT = get_lib_ext()
 logging.info('Found static library extension: %s', LIB_EXT)
 
 
@@ -96,7 +97,7 @@ def do_build(git_url='https://github.com/llvm/llvm-project.git'):
             rmtree(hdr_dest_dir)
         copytree(
             tmpdir, hdr_dest_dir,
-            ignore=_include_patterns('*.h', '*.inc'), copy_function=_copy)
+            ignore=_include_patterns('*.h', '*.inc', '*.def'), copy_function=_copy)
         logging.info('Took %g seconds to copy headers', (time() - tstart))
 
 
@@ -118,9 +119,23 @@ if ('sdist' not in sys.argv and
 else:
     logging.info('Static libraries appear to exist already')
 
+
+# Update list of link-ordered LLVM libraries if we
+# have llvm-config available
+if shutil_which('llvm-config') is not None:
+    with open('llvm_lib_list.txt', 'w') as txt:
+        LLVM_LIBS = subprocess.run(
+            ['llvm-config', '--libs', '--link-static'],
+            stdout=subprocess.PIPE,
+            check=True).stdout.decode()
+        LLVM_LIBS = [_clean_prefix(_clean_ext(pathlib.Path(l)), '-l')
+                     for l in LLVM_LIBS.split()]
+        txt.write('\n'.join(LLVM_LIBS))
+
+
 setup(
     name='clangTooling',
-    version='0.0.4',
+    version='0.0.5',
     author='Nicholas McKibben',
     author_email='nicholas.bgp@gmail.com',
     url='https://github.com/mckib2/clangTooling',
@@ -133,7 +148,7 @@ setup(
     python_requires='>=3.6',
     include_package_data=True,
     package_data={
-        '': [f'*{LIB_EXT}', '*.h', '*.inc'],
+        '': [f'*{LIB_EXT}', '*.h', '*.inc', '*.def', 'llvm_lib_list.txt'],
     },
 
     # Add a dummy extension to get separate wheels for each OS
