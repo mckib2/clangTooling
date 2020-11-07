@@ -96,7 +96,7 @@ def do_build(git_url='https://github.com/llvm/llvm-project.git'):
             rmtree(hdr_dest_dir)
         copytree(
             tmpdir, hdr_dest_dir,
-            ignore=_include_patterns('*.h', '*.inc'), copy_function=_copy)
+            ignore=_include_patterns('*.h', '*.inc', '*.def'), copy_function=_copy)
         logging.info('Took %g seconds to copy headers', (time() - tstart))
 
 
@@ -120,7 +120,7 @@ else:
 
 setup(
     name='clangTooling',
-    version='0.0.4',
+    version='0.0.5',
     author='Nicholas McKibben',
     author_email='nicholas.bgp@gmail.com',
     url='https://github.com/mckib2/clangTooling',
@@ -133,7 +133,7 @@ setup(
     python_requires='>=3.6',
     include_package_data=True,
     package_data={
-        '': [f'*{LIB_EXT}', '*.h', '*.inc'],
+        '': [f'*{LIB_EXT}', '*.h', '*.inc', '*.def'],
     },
 
     # Add a dummy extension to get separate wheels for each OS
