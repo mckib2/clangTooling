@@ -7,4 +7,3 @@ clangTooling.egg-info/
 dist/
 __pycache__/
 *.pyc
-llvm_lib_list.txt

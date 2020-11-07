@@ -4,7 +4,7 @@ from tempfile import TemporaryDirectory
 import subprocess
 import pathlib
 from fnmatch import filter as fnfilter
-from shutil import copytree, copyfileobj, rmtree
+from shutil import copytree, copyfileobj, rmtree, which as shutil_which
 from os import cpu_count, walk, chmod
 from os.path import isdir, join
 import logging
@@ -120,15 +120,17 @@ else:
     logging.info('Static libraries appear to exist already')
 
 
-# Create list of link-ordered LLVM libraries
-with open('llvm_lib_list.txt', 'w') as txt:
-    LLVM_LIBS = subprocess.run(
-        ['llvm-config', '--libs', '--link-static'],
-        stdout=subprocess.PIPE,
-        check=True).stdout.decode()
-    LLVM_LIBS = [_clean_prefix(_clean_ext(pathlib.Path(l)), '-l')
-                 for l in LLVM_LIBS.split()]
-    txt.write('\n'.join(LLVM_LIBS))
+# Update list of link-ordered LLVM libraries if we
+# have llvm-config available
+if shutil_which('llvm-config') is not None:
+    with open('llvm_lib_list.txt', 'w') as txt:
+        LLVM_LIBS = subprocess.run(
+            ['llvm-config', '--libs', '--link-static'],
+            stdout=subprocess.PIPE,
+            check=True).stdout.decode()
+        LLVM_LIBS = [_clean_prefix(_clean_ext(pathlib.Path(l)), '-l')
+                     for l in LLVM_LIBS.split()]
+        txt.write('\n'.join(LLVM_LIBS))
 
 
 setup(
