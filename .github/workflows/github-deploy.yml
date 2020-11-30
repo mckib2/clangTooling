@@ -1,14 +1,14 @@
 name: Build and upload to PyPI
 
 # Build on every branch push, tag push:
-on: [push]
+# on: [push]
 # Alternatively, to publish when a (published) GitHub Release is created, use the following:
-#on:
+on:
 #   push:
 #   pull_request:
-#  release:
-#    types:
-#      - published
+  release:
+    types:
+      - published
 
 env:
   CIBW_SKIP: cp27-* pp27-* cp35-* cp34-* cp33-* # skip python2.7 and <=3.5 builds
@@ -21,8 +21,8 @@ jobs:
     strategy:
       matrix:
         # os: [ubuntu-18.04, windows-latest, macos-latest]
-	os: [ubuntu-18.04, macos-latest]
-	
+        os: [ubuntu-18.04, macos-latest]
+
     steps:
       - uses: actions/checkout@v2
 
@@ -33,7 +33,7 @@ jobs:
 
       - name: Install cibuildwheel
         run: |
- 	  python -m pip install git+https://github.com/joerick/cibuildwheel.git@master
+          python -m pip install git+https://github.com/joerick/cibuildwheel.git@master
 
       - name: Install Visual C++ for Python 2.7
         if: runner.os == 'Windows'
