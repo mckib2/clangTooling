@@ -36,7 +36,7 @@ def llvm_library_list() -> list:
 
     # read in list of all LLVM libraries in correct order;
     # iterate through list keeping only entries that we have
-    with open('llvm_lib_list.txt', 'r') as txt:
+    with open(pathlib.Path(__file__).parent / 'llvm_lib_list.txt', 'r') as txt:
         theirs = txt.read().split()
     ours = set(library_list())
     return [lib for lib in theirs if lib in ours]
