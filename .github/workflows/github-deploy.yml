@@ -11,8 +11,8 @@ on: [push]
 #      - published
 
 env:
-  # CIBW_SKIP: cp27-* pp27-* cp35-* cp34-* cp33-* # skip python2.7 and <=3.5 builds
-  CIBW_BUILD: cp38-*  # only do one version of python for now
+  CIBW_SKIP: cp27-* pp27-* cp35-* cp34-* cp33-* # skip python2.7 and <=3.5 builds
+  # CIBW_BUILD: cp38-*  # only do one version of python for now
 
 jobs:
   build_wheels:
@@ -20,8 +20,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04, windows-latest, macos-latest]
-
+        # os: [ubuntu-18.04, windows-latest, macos-latest]
+	os: [ubuntu-18.04, macos-latest]
+	
     steps:
       - uses: actions/checkout@v2
 
@@ -32,7 +33,7 @@ jobs:
 
       - name: Install cibuildwheel
         run: |
-          python -m pip install cibuildwheel==1.6.1
+ 	  python -m pip install git+https://github.com/joerick/cibuildwheel.git@master
 
       - name: Install Visual C++ for Python 2.7
         if: runner.os == 'Windows'
