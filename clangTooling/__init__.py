@@ -5,6 +5,7 @@ from .lib import (
     library_dir,
     library_list,
     llvm_library_list,
+    clang_library_list,
 )
 from .include import (
     header_dir,

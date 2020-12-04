@@ -91,17 +91,27 @@ def _do_build(git_url, tmpdir):
         ignore=_include_patterns('*.h', '*.inc', '*.def'), copy_function=_copy)
     logging.info('Took %g seconds to copy headers', (time() - tstart))
 
-    
-def do_build(git_url='https://github.com/llvm/llvm-project.git', win_plat=None):
+
+def do_build(git_url='https://github.com/llvm/llvm-project.git', win_plat=None, use_tmp=False):
     '''Build clangTooling from source.'''
 
     if win_plat is not None:
         if win_plat not in {'win32', 'win_amd64'}:
             raise ValueError(f'Unknown windows platform {str(win_plat)}')
-        tmpdir = pathlib.Path(f'./build{win_plat}')
-        tmpdir.mkdir(exist_ok=True, parents=True)
-        tmpdir = str(tmpdir)
-        _do_build(git_url, tmpdir)
+        if use_tmp:
+            with TemporaryDirectory() as tmpdir:
+                _do_build(git_url, tmpdir)
+        else:
+            tmpdir = pathlib.Path(f'./build{win_plat}')
+            tmpdir.mkdir(exist_ok=True, parents=True)
+            tmpdir = str(tmpdir)
+            _do_build(git_url, tmpdir)
     else:
-        with TemporaryDirectory() as tmpdir:
+        if use_tmp:
+            with TemporaryDirectory() as tmpdir:
+                _do_build(git_url, tmpdir)
+        else:
+            tmpdir = pathlib.Path(f'./build_clang')
+            tmpdir.mkdir(exist_ok=True, parents=True)
+            tmpdir = str(tmpdir)     
             _do_build(git_url, tmpdir)

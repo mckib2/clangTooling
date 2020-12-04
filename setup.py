@@ -6,6 +6,7 @@ from shutil import which as shutil_which
 import logging
 import platform
 import sys
+import os
 
 from distutils.core import setup
 from setuptools import Extension, find_packages
@@ -13,7 +14,7 @@ from setuptools import Extension, find_packages
 from clangTooling import get_lib_ext
 from clangTooling.lib import _clean_prefix, _clean_ext
 
-from build_utils import _include_patterns, _run_cmd, do_build
+from build_utils import _run_cmd, do_build
 
 # Windows requires nonempty static library name to get extension
 LIB_EXT = get_lib_ext()
@@ -34,7 +35,7 @@ if ('sdist' not in sys.argv and
 
     if platform.system() != 'Windows':
         logging.info('Building static libaries...')
-        do_build()
+        do_build(use_tmp=os.environ.get('USE_TMP_DIR', False))
     else:
         raise ValueError('Windows static libraries must be manually built!')
 else:
@@ -56,7 +57,7 @@ if shutil_which('llvm-config') is not None:
 
 setup(
     name='clangTooling',
-    version='0.0.6',
+    version='0.0.7',
     author='Nicholas McKibben',
     author_email='nicholas.bgp@gmail.com',
     url='https://github.com/mckib2/clangTooling',
