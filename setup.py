@@ -26,8 +26,8 @@ logging.info('Found static library extension: %s', LIB_EXT)
 logging.basicConfig(level=logging.INFO)
 # We don't want to rebuild clangTooling if it's a source
 # distribution or the files have already been generated
-if ('sdist' not in sys.argv and
-        not list((pathlib.Path(__file__).parent / 'clangTooling/lib').glob(f'*{LIB_EXT}'))):
+if ('sdist' not in sys.argv):# and
+        # not list((pathlib.Path(__file__).parent / 'clangTooling/lib').glob(f'*{LIB_EXT}'))):
     logging.info('Checking build dependencies...')
     # if which('cmake') is None:
     _run_cmd(['python', '-m', 'pip', 'install', 'cmake'],
