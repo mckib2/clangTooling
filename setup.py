@@ -16,6 +16,9 @@ from clangTooling.lib import _clean_prefix, _clean_ext
 
 from build_utils import _run_cmd, do_build
 
+# Log the setup process
+logging.basicConfig(level=logging.INFO)
+
 # Windows requires nonempty static library name to get extension
 LIB_EXT = get_lib_ext()
 logging.info('Found static library extension: %s', LIB_EXT)
@@ -57,7 +60,7 @@ if shutil_which('llvm-config') is not None:
 
 setup(
     name='clangTooling',
-    version='0.0.7',
+    version='0.0.8',
     author='Nicholas McKibben',
     author_email='nicholas.bgp@gmail.com',
     url='https://github.com/mckib2/clangTooling',

@@ -13,6 +13,7 @@ on:
 env:
   CIBW_SKIP: cp27-* pp27-* cp35-* cp34-* cp33-* # skip python2.7 and <=3.5 builds
   # CIBW_BUILD: cp38-*  # only do one version of python for now
+  CIBW_BUILD_VERBOSITY: 1
 
 jobs:
   build_wheels:
@@ -40,7 +41,7 @@ jobs:
         run: |
           choco install vcpython27 -f -y
 
-      - name: Build llvm/clang
+      - name: Fetch/Prebuild llvm/clang
         run: |
           python setup.py build_ext --inplace
 
